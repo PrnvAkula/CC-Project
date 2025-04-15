@@ -35,10 +35,12 @@
     return digit;
 }
 
-[<>=] {
+[<>] {
     yylval.chr = yytext[0];
     return rel_op;
 }
+
+"=" {return EQ;}
 
 "(" {return OB;}
 
@@ -57,6 +59,10 @@
 "[" {return OSB;}
 
 "]" {return CSB;}
+
+\" {return double_quot;}
+
+"@" {return AT;}
 
 [-+*/%] {
     yylval.chr = yytext[0];

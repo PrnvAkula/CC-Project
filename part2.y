@@ -9,17 +9,25 @@ extern FILE* yyin;
     char* str;
     int num;
     char chr;
+
+    struct {
+        int int_val;
+        int base;
+        char* name;
+        char char_val;
+    }t;
 }
 
 %token <str> begin_prog end_prog begin_vardecl end_vardecl
 %token <str> keyword
 %token <str> name
 %token <num> digit
-%token <chr> rel_op OB CB SC comma colon OCB CCB OSB CSB
+%token <chr> rel_op OB CB SC comma colon OCB CCB OSB CSB EQ AT
 %token <chr> arith_op
-%token single_quot
+%token single_quot double_quot
 %token NL
 
+%type <t> var_assign
 
 %%
 start : begin_prog code end_prog { printf("Valid syntax!!!\n"); return 0;}
@@ -44,10 +52,16 @@ program: var_assign { }
        | loop_stmt { }
 ;
 
-var_assign :
+var_assign : name SC EQ OB digit comma digit CB SC { $<t.name>$ = $1; $<t.int_val>$ = $5; $<t.base>$ = $7; }
+           | name SC EQ single_quot name single_quot {$<t.name>$ = $1; $<t.char_val>$ = $5;}
 ;
 
-print_scan :
+print_scan : print OB double_quot name double_quot CB SC { }
+           | scan OB ats CB SC { }
+;
+
+ats : AT comma ats { }
+    | AT { }
 ;
 
 cond_stmt :
