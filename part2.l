@@ -20,7 +20,20 @@
     return end_vardecl;
 }
 
-(int|char|if|else|while|for|main|begin|end|print|scan|program|VarDecl|inc|dec|do) {
+"print" { return print; }
+"scan" { return scan; }
+"begin" { return begin; }
+"end" {return end;}
+"if" {return IF;}
+"else" {return ELSE;}
+"for" {return FOR;}
+"while" {return WHILE;}
+"inc" {return INC;}
+"dec" {return DEC;}
+"do" {return DO;}
+"to" {return TO;}
+
+(int|char|while|for|main|program|VarDecl|inc|dec|do) {
     yylval.str = strdup(yytext);  // Use strdup to allocate memory
     return keyword;
 }
