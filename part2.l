@@ -1,7 +1,14 @@
 %{
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "part2.tab.h"
+#include "part2.h"  /* Include this first */
+#include "part2.tab.h"  /* Include the bison-generated header second */
+
+/* This ensures proper token recognition and handling */
 %}
+
+%option noyywrap
 
 %%
 "begin program:" {
@@ -33,6 +40,10 @@
 "do" {return DO;}
 "to" {return TO;}
 
+("int"|"char") {
+    yylval.str = strdup(yytext);  // Use strdup to allocate memory
+    return type;
+}
 (int|char|while|for|main|program|VarDecl|inc|dec|do) {
     yylval.str = strdup(yytext);  // Use strdup to allocate memory
     return keyword;
@@ -40,7 +51,7 @@
 
 [a-z]+ {
     yylval.str = strdup(yytext);  // Use strdup to allocate memory
-    return name;
+    return ID;
 }
 
 [0-9]+ {
@@ -53,7 +64,7 @@
     return rel_op;
 }
 
-"=" {return EQ;}
+":=" {return EQ;}
 
 "(" {return OB;}
 
@@ -73,7 +84,12 @@
 
 "]" {return CSB;}
 
-\" {return double_quot;}
+\"[^\"]*\" {
+    /* strip the quotes */
+    yylval.str = strdup(yytext+1);
+    yylval.str[strlen(yylval.str)-1] = '\0';
+    return STRING;
+}
 
 "@" {return AT;}
 
@@ -83,7 +99,7 @@
 }
 
 "'" { return single_quot; }
-\n  { return NL; }
-[ \t]+ {  }
+
+[ \t\n]+  { /* skip all whitespace & newlines */ }
 .  {  }
 %%
