@@ -211,7 +211,7 @@ void printAST(ASTNode* node) {
         case NODE_ADD:
             printf("(+ ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -219,7 +219,7 @@ void printAST(ASTNode* node) {
         case NODE_SUB:
             printf("(- ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -227,7 +227,7 @@ void printAST(ASTNode* node) {
         case NODE_MUL:
             printf("(* ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -235,7 +235,7 @@ void printAST(ASTNode* node) {
         case NODE_DIV:
             printf("(/ ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -243,7 +243,7 @@ void printAST(ASTNode* node) {
         case NODE_MOD:
             printf("%% ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -251,7 +251,7 @@ void printAST(ASTNode* node) {
         case NODE_GREATER:
             printf("(> ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -259,7 +259,7 @@ void printAST(ASTNode* node) {
         case NODE_LESS:
             printf("(< ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -267,7 +267,7 @@ void printAST(ASTNode* node) {
         case NODE_EQUAL:
             printf("(== ");
             printAST(node->data.op.left);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.op.right);
             printf(")");
             break;
@@ -275,7 +275,7 @@ void printAST(ASTNode* node) {
         case NODE_ASSIGN:
             printf("(:= ");
             printAST(node->data.assign.variable);
-            printf(" ");
+            //printf(" ");
             printAST(node->data.assign.value);
             printf(")");
             break;

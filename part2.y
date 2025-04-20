@@ -5,6 +5,7 @@
 #include "part2.h"  // Include AST header
 
 extern FILE* yyin;
+extern FILE* yyout;
 void yyerror(const char* s);
 int yylex(void);
 
@@ -51,9 +52,18 @@ ASTNode* program_root = NULL;
 start : begin_prog code end_prog { 
         printf("Valid syntax!!!\n"); 
         program_root = $2;
-        printf("AST in the generalized list form\n");
+        
+        //fprintf(yyout, "AST in the generalized list form\n");
+        
+        FILE *saved_stdout = stdout;
+        stdout = yyout;
+        
         printAST(program_root);
-        printf("\n");
+        fprintf(yyout, "\n");
+        
+        stdout = saved_stdout;
+        
+        printf("AST output written to output.txt\n");
         return 0;
     }
 ;
@@ -243,6 +253,14 @@ int main(int argc, char *argv[]) {
         perror("Error opening file");
         return 1;
     }
+
+    yyout = fopen("output.txt", "w");
+    if (!yyout) {
+        perror("Error opening output file");
+        fclose(yyin);
+        return 1;
+    }
+
     yyparse();
     
     // Free the AST
