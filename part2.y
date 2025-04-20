@@ -2,14 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "part2.h"  // Include AST header
+#include "part2.h"  
 
 extern FILE* yyin;
 extern FILE* yyout;
 void yyerror(const char* s);
 int yylex(void);
 
-// Root of AST
 ASTNode* program_root = NULL;
 %}
 
@@ -53,6 +52,10 @@ start : begin_prog code end_prog {
         printf("Valid syntax!!!\n"); 
         program_root = $2;
         
+        printf("\nAST in the generalized list form:\n");
+        printAST(program_root);
+        printf("\n");
+        
         //fprintf(yyout, "AST in the generalized list form\n");
         
         FILE *saved_stdout = stdout;
@@ -71,14 +74,12 @@ start : begin_prog code end_prog {
 code : vardecl stmts { 
         ASTNode* program = createProgramNode();
         
-        // Add all variable declarations to the program
         ASTNode* current_decl = $1;
         while (current_decl) {
             addStatementToBlock(program, current_decl);
             current_decl = current_decl->next;
         }
         
-        // Add all statements to the program
         ASTNode* current_stmt = $2;
         while (current_stmt) {
             addStatementToBlock(program, current_stmt);
@@ -96,7 +97,6 @@ decl_list: decl {
         $$ = $1;
     }
     | decl_list decl { 
-        // Link declarations together
         ASTNode* last = $1;
         while (last->next) {
             last = last->next;
@@ -119,7 +119,6 @@ stmts : stmt {
         $$ = $1;
     }
     | stmts stmt { 
-        // Link statements together
         ASTNode* last = $1;
         while (last->next) {
             last = last->next;
@@ -156,7 +155,6 @@ print_scan: print OB STRING comma expr CB SC {
         $$ = createPrintNode($3, $5.ast);
     }
     | scan OB ats CB SC {
-        // For now, create a simple print node with null value
         $$ = createPrintNode("scan placeholder", NULL);
     }
 ;
@@ -174,45 +172,36 @@ cond_stmt: IF OB expr CB block SC %prec IFX {
 ;
 
 loop_stmt: FOR ID EQ expr TO expr INC expr DO block SC {
-        // Create init assignment
         ASTNode* var_node = createVariableNode($2);
         ASTNode* init = createAssignNode(var_node, $4.ast);
         
-        // Create for node with proper components
         $$ = createForNode(init, $6.ast, $8.ast, $10);
     }
     | FOR ID EQ expr TO expr DEC expr DO block SC {
-        // Similar to above but with dec instead of inc
         ASTNode* var_node = createVariableNode($2);
         ASTNode* init = createAssignNode(var_node, $4.ast);
         
-        // Create for node with proper components
         $$ = createForNode(init, $6.ast, $8.ast, $10);
     }
     | WHILE OB expr CB DO block SC {
-        // Create a while loop (using for node structure)
         $$ = createForNode(NULL, $3.ast, NULL, $6);
     }
 ;
 
 expr: OB expr CB {
-        /* parentheses: propagate the inner node */
         $$ = $2;
     }
     | digit comma digit {
-        /* literal (n,base) */
         $$.int_val = $1;
         $$.base = $3;
         $$.var_name = NULL;
         $$.ast = createNumberNode($1, $3);
     }
     | ID {
-        /* variable reference */
         $$.var_name = $1;
         $$.ast = createVariableNode($1);
     }
     | expr arith_op expr {
-        /* binary operator */
         NodeType op_type;
         switch($2) {
             case '+': op_type = NODE_ADD; break;
@@ -220,7 +209,7 @@ expr: OB expr CB {
             case '*': op_type = NODE_MUL; break;
             case '/': op_type = NODE_DIV; break;
             case '%': op_type = NODE_MOD; break;
-            default: op_type = NODE_ADD; break; // Default to add
+            default: op_type = NODE_ADD; break; 
         }
         
         $$.int_val = $1.int_val;
@@ -228,8 +217,7 @@ expr: OB expr CB {
         $$.base = $3.int_val;
         $$.ast = createOperatorNode(op_type, $1.ast, $3.ast);
     }
-    | expr rel_op expr {  /* Changed from ID rel_op expr to expr rel_op expr */
-        /* relational operator */
+    | expr rel_op expr {  
         NodeType op_type;
         switch($2) {
             case '<': op_type = NODE_LESS; break;
@@ -263,12 +251,12 @@ int main(int argc, char *argv[]) {
 
     yyparse();
     
-    // Free the AST
     if (program_root) {
         freeAST(program_root);
     }
     
     fclose(yyin);
+    fclose(yyout);  
     return 0;
 }
 

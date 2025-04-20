@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Create a number node with base
 ASTNode* createNumberNode(int value, int base) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -17,7 +16,6 @@ ASTNode* createNumberNode(int value, int base) {
     return node;
 }
 
-// Create a variable reference node
 ASTNode* createVariableNode(char* name) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -30,7 +28,6 @@ ASTNode* createVariableNode(char* name) {
     return node;
 }
 
-// Create a string literal node
 ASTNode* createStringNode(char* value) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -43,7 +40,6 @@ ASTNode* createStringNode(char* value) {
     return node;
 }
 
-// Create a binary operator node
 ASTNode* createOperatorNode(NodeType type, ASTNode* left, ASTNode* right) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -57,7 +53,6 @@ ASTNode* createOperatorNode(NodeType type, ASTNode* left, ASTNode* right) {
     return node;
 }
 
-// Create an assignment node
 ASTNode* createAssignNode(ASTNode* variable, ASTNode* value) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -71,7 +66,6 @@ ASTNode* createAssignNode(ASTNode* variable, ASTNode* value) {
     return node;
 }
 
-// Create a variable declaration node
 ASTNode* createVarDeclNode(char* name, char* type) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -85,7 +79,6 @@ ASTNode* createVarDeclNode(char* name, char* type) {
     return node;
 }
 
-// Create a print statement node
 ASTNode* createPrintNode(char* format, ASTNode* value) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -99,7 +92,6 @@ ASTNode* createPrintNode(char* format, ASTNode* value) {
     return node;
 }
 
-// Create an if statement node
 ASTNode* createIfNode(ASTNode* condition, ASTNode* if_body, ASTNode* else_body) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -114,7 +106,6 @@ ASTNode* createIfNode(ASTNode* condition, ASTNode* if_body, ASTNode* else_body) 
     return node;
 }
 
-// Create a for loop node
 ASTNode* createForNode(ASTNode* init, ASTNode* condition, ASTNode* update, ASTNode* body) {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -130,7 +121,6 @@ ASTNode* createForNode(ASTNode* init, ASTNode* condition, ASTNode* update, ASTNo
     return node;
 }
 
-// Create a block node for multiple statements
 ASTNode* createBlockNode() {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -144,7 +134,6 @@ ASTNode* createBlockNode() {
     return node;
 }
 
-// Add a statement to a block node
 void addStatementToBlock(ASTNode* block, ASTNode* statement) {
     if (block->type != NODE_BLOCK && block->type != NODE_PROGRAM) {
         fprintf(stderr, "Error: Not a block or program node\n");
@@ -165,7 +154,6 @@ void addStatementToBlock(ASTNode* block, ASTNode* statement) {
     block->data.block.statements[block->data.block.count - 1] = statement;
 }
 
-// Create a program node (top-level node)
 ASTNode* createProgramNode() {
     ASTNode* node = (ASTNode*)malloc(sizeof(ASTNode));
     if (!node) {
@@ -179,7 +167,6 @@ ASTNode* createProgramNode() {
     return node;
 }
 
-// Print the AST in generalized list format
 void printAST(ASTNode* node) {
     if (!node) return;
     
@@ -319,7 +306,6 @@ void printAST(ASTNode* node) {
     }
 }
 
-// Free all memory allocated for the AST
 void freeAST(ASTNode* node) {
     if (!node) return;
     
