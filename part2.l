@@ -84,10 +84,10 @@
 
 "]" {return CSB;}
 
+
 \"[^\"]*\" {
-    /* strip the quotes */
-    yylval.str = strdup(yytext+1);
-    yylval.str[strlen(yylval.str)-1] = '\0';
+    /* Don't strip the quotes, keep them as part of the string */
+    yylval.str = strdup(yytext);
     return STRING;
 }
 
